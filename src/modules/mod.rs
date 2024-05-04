@@ -1,4 +1,4 @@
-// pub mod battery_mod;
+//pub mod battery_mod;
 pub mod clock_mod;
 //pub mod cpu_mod;
 //pub mod disk_mod;
