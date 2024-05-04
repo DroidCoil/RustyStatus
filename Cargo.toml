@@ -12,3 +12,6 @@ chrono = "0.4.38"
 
 # Battery
 battery = "0.7.8"
+
+# Volume
+alsa = "0.9.0"
