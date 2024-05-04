@@ -7,8 +7,8 @@ edition = "2021"
 
 [dependencies]
 
+# Clock
 chrono = "0.4.38"
 
-# Uncomment for battery
-# notify-rust = "4.11.0"
-#battery = "0.7.8"
+# Battery
+battery = "0.7.8"

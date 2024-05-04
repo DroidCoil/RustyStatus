@@ -1,9 +1,9 @@
-use crate::modules::clock_mod::clock;
+use crate::modules::{battery_mod::_batterystat, clock_mod::clock};
 
 pub fn configs() -> Vec<Module> {
     let mut mods: Vec<Module> = vec![];
     mods = pushmod(mods, 0, 60, clock);
-    //mods = pushmod(mods, 1, 1, _batterystat);
+    mods = pushmod(mods, 1, 1, _batterystat);
 
     return mods;
 }

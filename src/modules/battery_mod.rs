@@ -12,8 +12,9 @@ const NOTIFICATIONS: bool = true;
 pub fn _batterystat() -> String {
     let mut output: String = String::from("");
 
-    let batman = battery::Manager::new();
-    let _battery = match batman.unwrap().batteries().unwrap().next() {
+    // select battery
+    let batterymanager = battery::Manager::new();
+    let battery = match batterymanager.unwrap().batteries().unwrap().next() {
         Some(Ok(battery)) => battery,
         Some(Err(_e)) => {
             return "Unable to access battery information".to_string();
@@ -23,53 +24,42 @@ pub fn _batterystat() -> String {
         }
     };
 
-    // Get battery state
-    let state = _battery.state();
+    // add label
+    output.push_str(LABEL);
 
-    // Get Charge Percantage
-    let percentage = (_battery.state_of_charge().value * 100.0) as u32;
+    // Get percentage
+    let percentage = (battery.state_of_charge().value * 100.0) as u32;
 
-    // Hours of charge remaining
-    let mut hours: String = String::new();
-
-    // Minutes of charge remaining
-    let mut minutes: String = String::new();
-
-    if state == State::Discharging || state == State::Charging {
-        if _battery.time_to_full().is_some() {
-            let time = _battery.time_to_full().unwrap().value as u32;
-            hours = (time / 3600 as u32).to_string();
-            minutes = ((time % 3600) / 60 as u32).to_string();
-        } else if _battery.time_to_empty().is_some() {
-            let time = _battery.time_to_empty().unwrap().value as u32;
-            hours = (time / 3600 as u32).to_string();
-            minutes = ((time % 3600) / 60 as u32).to_string();
+    // Get charge state of battery
+    if percentage >= FULLTHRESHOLD && battery.state() == State::Charging {
+        output.push_str("")
+    } else {
+        match battery.state() {
+            State::Charging => output.push_str(CHARGING),
+            State::Discharging => output.push_str(DISCHARGE),
+            State::Empty => output.push_str(""),
+            State::Full => output.push_str(FULL),
+            State::Unknown => output.push_str("?"),
+            _ => output.push_str("missing"),
         }
+    }
 
-        output.push_str(LABEL);
+    // Add percentage
+    output.push_str(&percentage.to_string());
+    output.push_str("%");
 
-        let outstate: &str;
-
-        match state {
-            State::Charging => outstate = CHARGING,
-            State::Discharging => outstate = DISCHARGE,
-            State::Empty => outstate = "",
-            State::Full => outstate = FULL,
-            State::Unknown => outstate = "?",
-            _ => outstate = "missing",
-        }
-
-        if percentage >= FULLTHRESHOLD {
-            if _battery.time_to_empty().is_some() {
-                output.push_str(DISCHARGE);
-            }
-            output.push_str("100");
-            output.push_str("%");
+    if battery.time_to_full().is_some() || battery.time_to_empty().is_some() {
+        let hours: String;
+        let minutes: String;
+        let time: u32;
+        if battery.time_to_full().is_some() {
+            time = battery.time_to_full().unwrap().value as u32;
         } else {
-            output.push_str(outstate);
-            output.push_str(percentage.to_string().as_str());
-            output.push_str("%");
+            time = battery.time_to_empty().unwrap().value as u32;
         }
+
+        hours = (time / 3600 as u32).to_string();
+        minutes = ((time % 3600) / 60 as u32).to_string();
 
         if hours.len() > 0 && minutes.len() > 0 {
             output.push_str(" (");
