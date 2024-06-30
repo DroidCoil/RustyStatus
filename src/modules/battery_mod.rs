@@ -4,7 +4,7 @@ const LABEL: &str = "Bat:";
 const CHARGING: &str = "+";
 const DISCHARGE: &str = "-";
 const FULL_THRESHOLD: u32 = 95;
-const ADDED_ZERO: bool = true;
+const ADDED_ZERO: bool = false;
 
 pub fn batterystat() -> String {
     let mut output = String::from(LABEL);
@@ -28,17 +28,14 @@ pub fn batterystat() -> String {
     output.push_str(&format!("{}%", percentage));
 
     if let Some(time) = battery.time_to_full().or(battery.time_to_empty()) {
-        let mut hours = (time.value as u32 / 3600).to_string();
-        let mut minutes = ((time.value as u32 % 3600) / 60).to_string();
-        if ADDED_ZERO == true {
-            if hours.len() == 1 {
-                hours.insert(0, '0')
-            }
-            if minutes.len() == 1 {
-                minutes.insert(0, '0')
-            }
+        let time_value = time.value as u32;
+        let hours = time_value / 3600;
+        let minutes = (time_value % 3600) / 60;
+        if ADDED_ZERO {
+            output.push_str(&format!(" ({:02}:{:02})", hours, minutes));
+        } else {
+            output.push_str(&format!(" ({}:{})", hours, minutes));
         }
-        output.push_str(&format!(" ({:02}:{:02})", hours, minutes));
     }
 
     output
