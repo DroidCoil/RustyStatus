@@ -1,10 +1,11 @@
-use crate::modules::{battery_mod::batterystat, clock_mod::clock, volume_mod::volumestat};
+use crate::modules::{battery_mod::batterystat, clock_mod::clock, ram_mod::ramstat, volume_mod::volumestat};
 
 pub fn configs() -> Vec<Module> {
     vec![
         create_module(60, clock),
         create_module(1, batterystat),
         create_module(1, volumestat),
+        create_module(1, ramstat),
     ]
 }
 
