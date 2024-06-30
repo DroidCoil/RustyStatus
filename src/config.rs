@@ -1,39 +1,29 @@
-use crate::modules::{battery_mod::_batterystat, clock_mod::clock, volume_mod::volumestat};
+use crate::modules::{battery_mod::batterystat, clock_mod::clock, volume_mod::volumestat};
 
 pub fn configs() -> Vec<Module> {
-    let mut mods: Vec<Module> = vec![];
-    mods = pushmod(mods, 0, 60, clock);
-    mods = pushmod(mods, 1, 1, _batterystat);
-    mods = pushmod(mods, 2, 1, volumestat);
-
-    return mods;
+    vec![
+        create_module(60, clock),
+        create_module(1, batterystat),
+        create_module(1, volumestat),
+    ]
 }
 
 pub struct Module {
     pub timer: i32,
     pub function: Box<dyn Fn() -> String>,
     pub output: String,
-    pub statusid: i32,
 }
 
 impl Module {
-    pub fn _refresh(&mut self) {
-        let _temp = &self.function;
-        self.output = _temp();
+    pub fn refresh(&mut self) {
+        self.output = (self.function)();
     }
 }
 
-fn pushmod(
-    mut mv: Vec<Module>,
-    statusid: i32,
-    timer: i32,
-    fun: impl Fn() -> String + 'static,
-) -> Vec<Module> {
-    mv.push(Module {
-        timer, // Set how often you want this to run
-        statusid,
+fn create_module(timer: i32, fun: impl Fn() -> String + 'static) -> Module {
+    Module {
+        timer,
         function: Box::new(fun),
-        output: String::from(""), // Module Name
-    });
-    return mv;
+        output: String::new(),
+    }
 }
