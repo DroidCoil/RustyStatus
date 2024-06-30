@@ -1,43 +1,31 @@
 mod config;
 mod modules;
 
-use std::{process::Command, thread::sleep};
-
-use config::{configs, Module};
+use std::{process::Command, thread::sleep, time::Duration};
+use config::configs;
 
 fn main() {
-    // Pull all active modules
-    let mut barmods: Vec<Module> = configs();
-    let mut timer: i32 = 1;
-    let mut statusid: i32 = 0;
+    let mut barmods = configs();
+    let maxtime = barmods.iter().map(|m| m.timer).max().unwrap_or(1);
+    let mut timer = 1;
 
-    // // Get min and max timer
-    let mut vectimer: Vec<i32> = vec![];
-    let maxtime: i32;
-    for m in &barmods {
-        vectimer.push(m.timer);
-    }
-    maxtime = vectimer.into_iter().max().unwrap();
-
-    for m in &mut barmods {
-        m._refresh();
-        statusupdate(statusid, &m.output);
-        statusid += 1;
+    // Initial status update
+    for (statusid, m) in barmods.iter_mut().enumerate() {
+        m.refresh();
+        statusupdate(statusid as i32, &m.output);
     }
 
-    // Bar refresh loop
     loop {
-        sleep(std::time::Duration::from_secs(1));
-        statusid = 0;
+        sleep(Duration::from_secs(1));
         if timer > maxtime {
             timer = 1;
         }
-        for m in &mut barmods {
+
+        for (statusid, m) in barmods.iter_mut().enumerate() {
             if timer % m.timer == 0 {
-                m._refresh();
-                statusupdate(statusid, &m.output);
+                m.refresh();
+                statusupdate(statusid as i32, &m.output);
             }
-            statusid += 1;
         }
         timer += 1;
     }
@@ -45,11 +33,7 @@ fn main() {
 
 fn statusupdate(statusid: i32, out: &str) {
     Command::new("duskc")
-        .arg("--ignore-reply")
-        .arg("run_command")
-        .arg("setstatus")
-        .arg(statusid.to_string().as_str())
-        .arg(out)
+        .args(&["--ignore-reply", "run_command", "setstatus", &statusid.to_string(), out])
         .output()
         .expect("failed to execute process");
 }
