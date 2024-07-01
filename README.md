@@ -5,8 +5,9 @@ Rusty Status is a Rust-based program designed to set the status bar in the Dusk 
 
 ### Modules
 
-- **Clock**
 - **Battery**
+- **Clock**
+- **Ram**
 - **Volume**
 
 Additional modules and features are currently in development; please refer to the issues section for updates.
