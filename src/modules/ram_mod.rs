@@ -17,6 +17,12 @@ pub fn ramstat() -> String {
             used_mem / 1024.0, // Convert to GB
             total_mem / 1024.0 // Convert to GB
         ));
+    } else if total_mem >= 1024.0 && used_mem < 1024.0 {
+        output.push_str(&format!(
+            " {:.1}MB/{:.1}GB",
+            used_mem,
+            total_mem / 1024.0 // Convert to GB
+        ));
     } else {
         output.push_str(&format!(
             " {:.1}MB/{:.1}MB",
