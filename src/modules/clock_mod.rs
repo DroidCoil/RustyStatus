@@ -1,5 +1,5 @@
 const LABEL: &str = "";
-const FORMAT: &str = "%I:%M%p";
+const FORMAT: &str = "%Y-%m-%d %H:%M";
 
 pub fn clock() -> String {
     let mut output = String::new();
