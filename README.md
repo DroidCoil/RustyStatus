@@ -30,14 +30,9 @@ To install Rusty Status, follow these steps:
    cd RustyStatus
    ```
 
-3. Build the project using Cargo:
+3. Install the project using Cargo:
    ```sh
-   cargo build --release
-   ```
-
-4. Finally, copy the compiled binary to `/usr/local/bin` for global access (you might need `sudo`):
-   ```sh
-   cp target/release/rustystatus /usr/local/bin/
+   cargo install --path .
    ```
 
 ## ⚙️  Configuration

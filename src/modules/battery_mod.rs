@@ -1,4 +1,5 @@
 use battery::{Manager, State};
+use anyhow::Result;
 
 const LABEL: &str = "Bat:";
 const CHARGING: &str = "+";
@@ -6,13 +7,13 @@ const DISCHARGE: &str = "-";
 const FULL_THRESHOLD: u32 = 95;
 const ADDED_ZERO: bool = false;
 
-pub fn batterystat() -> String {
+pub fn batterystat() -> Result<String> {
     let mut output = String::from(LABEL);
 
-    let manager = Manager::new().unwrap();
-    let battery = match manager.batteries().unwrap().next() {
+    let manager = Manager::new()?;
+    let battery = match manager.batteries()?.next() {
         Some(Ok(bat)) => bat,
-        _ => return "Unable to access battery information".to_string(),
+        _ => return Ok("Unable to access battery information".to_string()),
     };
 
     let percentage = (battery.state_of_charge().value * 100.0) as u32;
@@ -38,5 +39,5 @@ pub fn batterystat() -> String {
         }
     }
 
-    output
+    Ok(output)
 }
