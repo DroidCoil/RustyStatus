@@ -34,7 +34,7 @@ fn main() -> Result<()> {
 
 fn statusupdate(statusid: i32, out: &str) -> Result<()> {
     Command::new("duskc")
-        .args(&[
+        .args([
             "--ignore-reply",
             "run_command",
             "setstatus",
