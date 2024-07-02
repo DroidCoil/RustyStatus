@@ -1,8 +1,9 @@
 use sysinfo::{RefreshKind, System};
+use anyhow::Result;
 
 const LABEL: &str = "Mem:";
 
-pub fn ramstat() -> String {
+pub fn ramstat() -> Result<String> {
     let mut output = String::from(LABEL);
 
     let mut sys = System::new_with_specifics(RefreshKind::new());
@@ -31,5 +32,5 @@ pub fn ramstat() -> String {
         ));
     }
 
-    output
+    Ok(output)
 }
