@@ -1,5 +1,8 @@
-use alsa::{mixer::{SelemChannelId, SelemId}, Mixer};
-use anyhow::{Result, anyhow};
+use alsa::{
+    mixer::{SelemChannelId, SelemId},
+    Mixer,
+};
+use anyhow::{anyhow, Result};
 
 const LABEL: &str = "Vol:";
 
@@ -8,7 +11,9 @@ pub fn volumestat() -> Result<String> {
 
     let mixer = Mixer::new("default", false)?;
     let selem_id = SelemId::new("Master", 0);
-    let elem = mixer.find_selem(&selem_id).ok_or_else(|| anyhow!("Unable to find Master element"))?;
+    let elem = mixer
+        .find_selem(&selem_id)
+        .ok_or_else(|| anyhow!("Unable to find Master element"))?;
     let (_min_volume, max_volume) = elem.get_playback_volume_range();
     let volume = elem.get_playback_volume(SelemChannelId::FrontLeft)?;
     let is_muted = elem.get_playback_switch(SelemChannelId::FrontLeft)? != 1;

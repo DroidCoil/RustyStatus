@@ -1,9 +1,9 @@
 mod config;
 mod modules;
 
-use std::{process::Command, thread::sleep, time::Duration};
 use anyhow::Result;
 use config::configs;
+use std::{process::Command, thread::sleep, time::Duration};
 
 fn main() -> Result<()> {
     let mut barmods = configs()?;
@@ -34,7 +34,13 @@ fn main() -> Result<()> {
 
 fn statusupdate(statusid: i32, out: &str) -> Result<()> {
     Command::new("duskc")
-        .args(&["--ignore-reply", "run_command", "setstatus", &statusid.to_string(), out])
+        .args(&[
+            "--ignore-reply",
+            "run_command",
+            "setstatus",
+            &statusid.to_string(),
+            out,
+        ])
         .output()?;
     Ok(())
 }

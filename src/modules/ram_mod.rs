@@ -1,5 +1,5 @@
-use sysinfo::{RefreshKind, System};
 use anyhow::Result;
+use sysinfo::{RefreshKind, System};
 
 const LABEL: &str = "Mem:";
 
@@ -15,8 +15,8 @@ pub fn ramstat() -> Result<String> {
     if total_mem >= 1024.0 {
         output.push_str(&format!(
             " {:.1}GB/{:.1}GB",
-            used_mem / 1024.0, // Convert to GB
-            total_mem / 1024.0 // Convert to GB
+            used_mem / 1024.0,  // Convert to GB
+            total_mem / 1024.0  // Convert to GB
         ));
     } else if total_mem >= 1024.0 && used_mem < 1024.0 {
         output.push_str(&format!(
@@ -25,11 +25,7 @@ pub fn ramstat() -> Result<String> {
             total_mem / 1024.0 // Convert to GB
         ));
     } else {
-        output.push_str(&format!(
-            " {:.1}MB/{:.1}MB",
-            used_mem,
-            total_mem
-        ));
+        output.push_str(&format!(" {:.1}MB/{:.1}MB", used_mem, total_mem));
     }
 
     Ok(output)

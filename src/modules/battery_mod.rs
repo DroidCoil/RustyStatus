@@ -1,5 +1,5 @@
-use battery::{Manager, State};
 use anyhow::Result;
+use battery::{Manager, State};
 
 const LABEL: &str = "Bat:";
 const CHARGING: &str = "+";
