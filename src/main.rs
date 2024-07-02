@@ -1,13 +1,13 @@
 mod config;
 mod modules;
 
-use anyhow::Result;
+use anyhow::{Ok, Result};
 use config::configs;
 use std::{process::Command, thread::sleep, time::Duration};
 
 fn main() -> Result<()> {
     let mut barmods = configs()?;
-    let maxtime = barmods.iter().map(|m| m.timer).max().unwrap_or(1);
+    let maxtime = barmods.iter().map(|m| m.config.timer).max().unwrap_or(1);
     let mut timer = 1;
 
     // Initial status update
@@ -15,7 +15,7 @@ fn main() -> Result<()> {
         m.refresh();
         statusupdate(statusid as i32, &m.output)?;
     }
-
+    
     loop {
         sleep(Duration::from_secs(1));
         if timer > maxtime {
@@ -23,7 +23,7 @@ fn main() -> Result<()> {
         }
 
         for (statusid, m) in barmods.iter_mut().enumerate() {
-            if timer % m.timer == 0 {
+            if timer % m.config.timer == 0 {
                 m.refresh();
                 statusupdate(statusid as i32, &m.output)?;
             }

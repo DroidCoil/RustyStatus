@@ -5,34 +5,42 @@ use anyhow::Result;
 
 pub fn configs() -> Result<Vec<Module>> {
     Ok(vec![
-        create_module(60, clock),
-        create_module(1, || {
-            batterystat().unwrap_or_else(|e| format!("Battery error: {}", e))
-        }),
-        create_module(1, || {
-            volumestat().unwrap_or_else(|e| format!("Volume error: {}", e))
-        }),
-        create_module(1, || {
-            ramstat().unwrap_or_else(|e| format!("RAM error: {}", e))
-        }),
+        create_module(clock),
+        create_module(ramstat),
+        //create_module(|_| batterystat().unwrap_or_else(|e| format!("Battery error: {}", e))),
+        //create_module(|_| volumestat().unwrap_or_else(|e| format!("Volume error: {}", e))),
+        //create_module(|_| ramstat().unwrap_or_else(|e| format!("RAM error: {}", e))),
     ])
 }
 
-pub struct Module {
+pub struct ModuleConfig {
+    pub icons: bool,
+    pub color: String,
+    pub label: String,
     pub timer: i32,
-    pub function: Box<dyn Fn() -> String>,
+}
+
+pub struct Module {
+    pub config: ModuleConfig,
+    pub function: Box<dyn Fn(&ModuleConfig) -> String>,
     pub output: String,
 }
 
 impl Module {
     pub fn refresh(&mut self) {
-        self.output = (self.function)();
+        self.output = (self.function)(&self.config);
     }
 }
 
-fn create_module(timer: i32, fun: impl Fn() -> String + 'static) -> Module {
+fn create_module(fun: impl Fn(&ModuleConfig) -> String + 'static) -> Module {
+    let modconfig = ModuleConfig {
+        icons: true,
+        color: "".to_string(),
+        label: "".to_string(),
+        timer: 1,
+    };
     Module {
-        timer,
+        config: modconfig,
         function: Box::new(fun),
         output: String::new(),
     }

@@ -1,9 +1,11 @@
 use anyhow::Result;
 use sysinfo::{RefreshKind, System};
 
+use crate::config::ModuleConfig;
+
 const LABEL: &str = "Mem:";
 
-pub fn ramstat() -> Result<String> {
+pub fn ramstat(conf: &ModuleConfig) -> String {
     let mut output = String::from(LABEL);
 
     let mut sys = System::new_with_specifics(RefreshKind::new());
@@ -28,5 +30,7 @@ pub fn ramstat() -> Result<String> {
         output.push_str(&format!(" {:.1}MB/{:.1}MB", used_mem, total_mem));
     }
 
-    Ok(output)
+    return output
+
+    //Ok(output)
 }
