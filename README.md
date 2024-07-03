@@ -1,5 +1,4 @@
-# 🌟 Rusty Status | [![Tests](https://img.shields.io/github/actions/workflow/status/DroidCoil/RustyStatus/ci.yml?branch=main)]
-(https://github.com/DroidCoil/RustyStatus/actions?query=branch%3Amain)
+# 🌟 Rusty Status | [![Tests](https://img.shields.io/github/actions/workflow/status/DroidCoil/RustyStatus/ci.yml?branch=main)](https://github.com/DroidCoil/RustyStatus/actions?query=branch%3Amain)
 Rusty Status is a Rust-based program designed to set the status bar in the Dusk Window Manager. It aims to be highly customizable, minimalistic, and modular.
 
 ## 📋 Features
